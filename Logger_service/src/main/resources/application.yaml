@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: Logger_service
+
+  kafka:
+    bootstrap-servers: kafka-1:29092,kafka-2:29192
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: logger_service_group
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      properties:
+        spring.json.value.default.type: org.example.logger_service.OrderCreatedEvent
+        spring.json.use.type.headers: false
+        reconnect.backoff.ms: 5000
+        reconnect.backoff.max.ms: 30000
+        spring.kafka.consumer.properties.metadata.max.age.ms: 30000
+
+
+server:
+  port: 9090

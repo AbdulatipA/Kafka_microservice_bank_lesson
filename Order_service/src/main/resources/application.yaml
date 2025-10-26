@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: Order_service
+
+  kafka:
+    bootstrap-servers: kafka-1:29092,kafka-2:29192
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+        acks: all
+        retries: 3
+        enable.idempotence: true
+        transactional.id: tr-id
+        reconnect.backoff.ms: 5000
+        reconnect.backoff.max.ms: 30000
+        spring.kafka.consumer.properties.metadata.max.age.ms: 30000
+
+server:
+  port: 8081
