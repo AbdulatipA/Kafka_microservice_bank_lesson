@@ -13,12 +13,12 @@
 
 ### Сервисы
 
->[Logger_service (producer)](https://gitlab.com/ataev0461/my_docker-compose_lesson/-/tree/main/Person_service/src/main/java/org/example/person_service?ref_type=heads)
+>[Logger_service (consumer)](https://github.com/AbdulatipA/Kafka_microservice_bank_lesson/tree/main/Logger_service/src/main/java/org/example/logger_service)
 
->[Order_service (consumer)](https://gitlab.com/ataev0461/my_docker-compose_lesson/-/tree/main/Group_service/src/main/java/org/example/group_service?ref_type=heads)
+>[Order_service (producer)](https://github.com/AbdulatipA/Kafka_microservice_bank_lesson/tree/main/Order_service/src/main/java/org/example/order_service)
 
->[Order_service_2](https://gitlab.com/ataev0461/my_docker-compose_lesson/-/tree/main/Gateway_service/src/main/java/org/example/gateway_service?ref_type=heads)
+>[Order_service_2 (producer)](https://github.com/AbdulatipA/Kafka_microservice_bank_lesson/tree/main/Order_service_2/src/main/java/org/example/order_service_2)
 
->[Transactional_service](https://gitlab.com/ataev0461/my_docker-compose_lesson/-/tree/main/Gateway_service/src/main/java/org/example/gateway_service?ref_type=heads)
+>[Transactional_service (consumer)](https://github.com/AbdulatipA/Kafka_microservice_bank_lesson/tree/main/Transactional_service/src/main/java/org/example/transactional_service)
 
 
