@@ -12,11 +12,18 @@ import org.springframework.stereotype.Service;
 public class OrderEventListener {
 
     @KafkaListener(
-            topics = "order-events",
+            topics = "order-created-events",
             groupId = "logger_service_group")
     public void handlerOrderCreatedEvent(@Payload OrderCreatedEvent orderCreatedEvent, Acknowledgment ack) {
-        log.info("событие создания заказа получено: " + orderCreatedEvent);
+        log.info("Событие получено: " + orderCreatedEvent);
+        ack.acknowledge();
+    }
 
+    @KafkaListener(
+            topics = "order-saved-events",
+            groupId = "logger_service_group")
+    public void handlerOrderSavedEvent(@Payload OrderSavedEvent orderSavedEvent, Acknowledgment ack) {
+        log.info("Событие получено: " + orderSavedEvent);
         ack.acknowledge();
     }
 }

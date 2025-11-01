@@ -52,13 +52,35 @@ services:
       KAFKA_DEFAULT_REPLICATION_FACTOR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
 
+  kafka-3:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: kafka-3
+    depends_on:
+      - zookeeper
+    ports:
+      - "9392:9392"
+    networks:
+      - app-network
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3:29392,PLAINTEXT_HOST://localhost:9392
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29392,PLAINTEXT_HOST://0.0.0.0:9392
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 2
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+
   logger-service:
     build: ./Logger_service
     container_name: logger_service
     ports:
       - "9090:9090"
     environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
     networks:
       - app-network
 
@@ -68,7 +90,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
     networks:
       - app-network
 
@@ -78,7 +100,7 @@ services:
     ports:
       - "8082:8082"
     environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
     networks:
       - app-network
 
@@ -88,7 +110,7 @@ services:
     ports:
       - "9091:9091"
     environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
     networks:
       - app-network
 
@@ -99,6 +121,28 @@ services:
       - "9093:9093"
     environment:
       POSTGRES_DB: transactional_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 123
+    networks:
+      - app-network
+
+  transactional-service-2:
+    build: ./Transactional_service_2
+    container_name: transactional_service_2
+    ports:
+      - "9191:9191"
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
+    networks:
+      - app-network
+
+  transactional-db-2:
+    image: postgres
+    container_name: transactional_db_2
+    ports:
+      - "9193:9193"
+    environment:
+      POSTGRES_DB: transactional_db_2
       POSTGRES_USER: user
       POSTGRES_PASSWORD: 123
     networks:

@@ -3,21 +3,22 @@ package org.example.order_service;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.order_service.exceptions.NotFoundException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class OrderService {
-    private final KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
-    private final String serviceName = "order_service-1";
+    private final OrderRepository orderRepository;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final String serviceName = "order_service_1";
 
-    @Transactional
     public String create(Order order) {
         publishOrderCreatedEvent(order);
         log.info("Событие OrderCreatedEvent отправлено в топик order-events");
@@ -35,13 +36,30 @@ public class OrderService {
         orderCreatedEvent.setServiceName(serviceName);
         orderCreatedEvent.setTotalAmount(order.getTotalAmount());
 
-//        kafkaTemplate.send("order-events", orderId, orderCreatedEvent);
+        kafkaTemplate.send("order-created-events", orderCreatedEvent);
+        log.info("Событие отправленно в топик order-events: {}", orderCreatedEvent);
+    }
 
-        kafkaTemplate.executeInTransaction(t -> {
-            t.send("order-events", orderCreatedEvent);
-            return null;
-        });
+    public Order findById(long id) {
+        Order foudOrder = orderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Пользователь с id: '%s' не найден".formatted(id))
+                );
 
-        log.info("Событие OrderCreatedEvent отправляется в топик order-events");
+        return foudOrder;
+    }
+
+    public List<Order> findAll() {
+        return orderRepository.findAll();
+    }
+
+    public Order savingAnOrder(OrderSavedEvent orderSavedEvent) {
+        Order order = new Order();
+
+        order.setId(orderSavedEvent.getId());
+        order.setUserId(orderSavedEvent.getUserId());
+        order.setTotalAmount(orderSavedEvent.getTotalAmount());
+        order.setOrderItems(orderSavedEvent.getOrderItems());
+
+        return orderRepository.save(order);
     }
 }

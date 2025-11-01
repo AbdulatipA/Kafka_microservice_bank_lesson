@@ -1,4 +1,4 @@
-package org.example.transactional_service;
+package org.example.transactional_service_2;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

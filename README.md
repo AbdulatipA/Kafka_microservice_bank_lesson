@@ -1,13 +1,13 @@
 # Урок microservice_bank_lesson
 
-## задача
+## Задача
 Релизовать работу с двумя kafka брокерами
 
 ## Требования к заданию
 - один сервис для логгирования данных
-- два order сервиса для отпрвки и создания заказов
-- один transactional сервис для сохранения данных в базу
-- два брокера
+- два order сервиса для создания заказов
+- два transactional сервис для сохранения заказов в бд
+- три брокера
 
 
 ### Сервисы
@@ -19,5 +19,7 @@
 >[Order_service_2 (producer)](https://github.com/AbdulatipA/Kafka_microservice_bank_lesson/tree/main/Order_service_2/src/main/java/org/example/order_service_2)
 
 >[Transactional_service (consumer)](https://github.com/AbdulatipA/Kafka_microservice_bank_lesson/tree/main/Transactional_service/src/main/java/org/example/transactional_service)
+
+>[Transactional_service_2 (consumer)](https://github.com/AbdulatipA/Kafka_microservice_bank_lesson/tree/main/Transactional_service/src/main/java/org/example/transactional_service)
 
 

@@ -1,9 +1,5 @@
-package org.example.order_service_2;
+package org.example.transactional_service_2;
 
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,23 +7,17 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "orders")
-public class Order {
-    @Id
+@NoArgsConstructor
+public class OrderSavedEvent {
     private long id;
-
     private long userId;
     private double totalAmount;
-    @ElementCollection
     private List<OrderItem> orderItems;
-
 
     @Override
     public String toString() {
-        return "Order: " + '\n' +
+        return "OrderSavedEvent: " + '\n' +
                 "id = " + id + '\n' +
                 "userId = " + userId + '\n' +
                 "totalAmount = " + totalAmount + '\n' +

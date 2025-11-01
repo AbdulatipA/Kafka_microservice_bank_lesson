@@ -1,11 +1,11 @@
 spring:
   application:
-    name: Transactional_service
+    name: Transactional_service_2
 
   datasource:
     password: 123
     username: user
-    url: jdbc:postgresql://transactional-db:5432/transactional_db
+    url: jdbc:postgresql://transactional-db-2:5432/transactional_db_2
   jpa:
     hibernate:
       ddl-auto: create
@@ -23,8 +23,8 @@ spring:
       auto-offset-reset: earliest
       properties:
         spring.json.type.mapping: >
-          org.example.order_service.OrderCreatedEvent:org.example.transactional_service.OrderCreatedEvent,
-          org.example.order_service_2.OrderCreatedEvent:org.example.transactional_service.OrderCreatedEvent
+          org.example.order_service.OrderCreatedEvent:org.example.transactional_service_2.OrderCreatedEvent,
+          org.example.order_service_2.OrderCreatedEvent:org.example.transactional_service_2.OrderCreatedEvent
         spring.json.trusted.packages: >
           org.example.logger_service,
           org.example.order_service,
@@ -50,4 +50,4 @@ spring:
         spring.kafka.consumer.properties.metadata.max.age.ms: 30000
 
 server:
-  port: 9091
+  port: 9191

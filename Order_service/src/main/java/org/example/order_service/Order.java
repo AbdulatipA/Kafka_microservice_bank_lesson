@@ -1,5 +1,6 @@
 package org.example.order_service;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,10 +10,15 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "orders")
 public class Order {
+    @Id
     private long id;
+
     private long userId;
     private double totalAmount;
+    @ElementCollection
     private List<OrderItem> orderItems;
 
 

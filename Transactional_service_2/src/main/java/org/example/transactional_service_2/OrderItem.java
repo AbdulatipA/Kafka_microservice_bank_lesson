@@ -1,4 +1,4 @@
-package org.example.order_service;
+package org.example.transactional_service_2;
 
 
 import jakarta.persistence.Embeddable;
@@ -15,6 +15,7 @@ public class OrderItem {
     private String productName;
     private double price;
     private int quantity;
+
 
     @Override
     public String toString() {

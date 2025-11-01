@@ -3,7 +3,7 @@ spring:
     name: Logger_service
 
   kafka:
-    bootstrap-servers: kafka-1:29092,kafka-2:29192
+    bootstrap-servers: kafka-1:29092,kafka-2:29192,kafka-3:29392
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
@@ -11,8 +11,18 @@ spring:
       auto-offset-reset: earliest
       enable-auto-commit: false
       properties:
-        spring.json.value.default.type: org.example.logger_service.OrderCreatedEvent
-        spring.json.use.type.headers: false
+        spring.json.type.mapping: > 
+          org.example.order_service.OrderCreatedEvent:org.example.logger_service.OrderCreatedEvent,
+          org.example.order_service_2.OrderCreatedEvent:org.example.logger_service.OrderCreatedEvent,
+          org.example.transactional_service.OrderSavedEvent:org.example.logger_service.OrderSavedEvent,
+          org.example.transactional_service_2.OrderSavedEvent:org.example.logger_service.OrderSavedEvent
+        spring.json.trusted.packages: >
+          org.example.logger_service,
+          org.example.order_service,
+          org.example.order_service_2,
+          org.example.transactional_service,
+          org.example.transactional_service_2
+        spring.json.use.type.headers: true
         reconnect.backoff.ms: 5000
         reconnect.backoff.max.ms: 30000
         spring.kafka.consumer.properties.metadata.max.age.ms: 30000

@@ -1,4 +1,4 @@
-package org.example.transactional_service;
+package org.example.transactional_service_2;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
