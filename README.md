@@ -18,5 +18,7 @@
 
 >[Transactional_service (consumer)](https://github.com/AbdulatipA/Kafka_microservice_bank_lesson/tree/main/Transactional_service/src/main/java/org/example/transactional_service)
 
+>[.env переменные окружения)](https://github.com/AbdulatipA/Kafka_microservice_bank_lesson/blob/main/.env)
+
 
 
