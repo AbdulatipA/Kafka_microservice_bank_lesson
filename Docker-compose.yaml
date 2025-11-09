@@ -14,20 +14,20 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"
+      - "${KAFKA_1_PORT}:${KAFKA_1_PORT}"
     networks:
       - app-network
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,PLAINTEXT_HOST://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:29092,PLAINTEXT_HOST://localhost:${KAFKA_1_PORT}
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,PLAINTEXT_HOST://0.0.0.0:${KAFKA_1_PORT}
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_DEFAULT_REPLICATION_FACTOR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
 
   kafka-2:
@@ -36,20 +36,20 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9192:9192"
+      - "${KAFKA_2_PORT}:${KAFKA_2_PORT}"
     networks:
       - app-network
     environment:
       KAFKA_BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:29192,PLAINTEXT_HOST://localhost:9192
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29192,PLAINTEXT_HOST://0.0.0.0:9192
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:29192,PLAINTEXT_HOST://localhost:${KAFKA_2_PORT}
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29192,PLAINTEXT_HOST://0.0.0.0:${KAFKA_2_PORT}
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_DEFAULT_REPLICATION_FACTOR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
 
   kafka-3:
@@ -58,28 +58,29 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9392:9392"
+      - "${KAFKA_3_PORT}:${KAFKA_3_PORT}"
     networks:
       - app-network
     environment:
       KAFKA_BROKER_ID: 3
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3:29392,PLAINTEXT_HOST://localhost:9392
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29392,PLAINTEXT_HOST://0.0.0.0:9392
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3:29392,PLAINTEXT_HOST://localhost:${KAFKA_3_PORT}
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29392,PLAINTEXT_HOST://0.0.0.0:${KAFKA_3_PORT}
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_DEFAULT_REPLICATION_FACTOR: 2
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
 
   logger-service:
     build: ./Logger_service
     container_name: logger_service
     ports:
-      - "9090:9090"
+      - "${LOGGER_SERVICE_PORT}:${LOGGER_SERVICE_PORT}"
     environment:
+      SERVER_PORT: "${LOGGER_SERVICE_PORT}"
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
     networks:
       - app-network
@@ -88,18 +89,31 @@ services:
     build: ./Order_service
     container_name: order_service
     ports:
-      - "8081:8081"
+      - "${ORDER_SERVICE_PORT}:${ORDER_SERVICE_PORT}"
     environment:
+      SERVER_PORT: "${ORDER_SERVICE_PORT}"
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
     networks:
       - app-network
 
   order-service-2:
-    build: ./Order_service_2
+    build: ./Order_service
     container_name: order_service_2
     ports:
-      - "8082:8082"
+      - "${ORDER_SERVICE_2_PORT}:${ORDER_SERVICE_2_PORT}"
     environment:
+      SERVER_PORT: "${ORDER_SERVICE_2_PORT}"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
+    networks:
+      - app-network
+
+  order-service-3:
+    build: ./Order_service
+    container_name: order_service_3
+    ports:
+      - "${ORDER_SERVICE_3_PORT}:${ORDER_SERVICE_3_PORT}"
+    environment:
+      SERVER_PORT: "${ORDER_SERVICE_3_PORT}"
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
     networks:
       - app-network
@@ -108,8 +122,9 @@ services:
     build: ./Transactional_service
     container_name: transactional_service
     ports:
-      - "9091:9091"
+      - "${TRANSACTIONAL_SERVICE_PORT}:${TRANSACTIONAL_SERVICE_PORT}"
     environment:
+      SERVER_PORT: "${TRANSACTIONAL_SERVICE_PORT}"
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
     networks:
       - app-network
@@ -118,7 +133,7 @@ services:
     image: postgres
     container_name: transactional_db
     ports:
-      - "9093:9093"
+      - "${TRANSACTIONAL_DB_PORT}:5432"
     environment:
       POSTGRES_DB: transactional_db
       POSTGRES_USER: user
@@ -127,11 +142,12 @@ services:
       - app-network
 
   transactional-service-2:
-    build: ./Transactional_service_2
+    build: ./Transactional_service
     container_name: transactional_service_2
     ports:
-      - "9191:9191"
+      - "${TRANSACTIONAL_SERVICE_2_PORT}:${TRANSACTIONAL_SERVICE_2_PORT}"
     environment:
+      SERVER_PORT: "${TRANSACTIONAL_SERVICE_2_PORT}"
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
     networks:
       - app-network
@@ -140,9 +156,32 @@ services:
     image: postgres
     container_name: transactional_db_2
     ports:
-      - "9193:9193"
+      - "${TRANSACTIONAL_DB_2_PORT}:5432"
     environment:
       POSTGRES_DB: transactional_db_2
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 123
+    networks:
+      - app-network
+
+  transactional-service-3:
+    build: ./Transactional_service
+    container_name: transactional_service_3
+    ports:
+      - "${TRANSACTIONAL_SERVICE_3_PORT}:${TRANSACTIONAL_SERVICE_3_PORT}"
+    environment:
+      SERVER_PORT: "${TRANSACTIONAL_SERVICE_3_PORT}"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
+    networks:
+      - app-network
+
+  transactional-db-3:
+    image: postgres
+    container_name: transactional_db_3
+    ports:
+      - "${TRANSACTIONAL_DB_3_PORT}:5432"
+    environment:
+      POSTGRES_DB: transactional_db_3
       POSTGRES_USER: user
       POSTGRES_PASSWORD: 123
     networks:
