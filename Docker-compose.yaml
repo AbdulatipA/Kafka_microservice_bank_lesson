@@ -74,6 +74,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
 
+
   logger-service:
     build: ./Logger_service
     container_name: logger_service
@@ -84,6 +85,7 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
     networks:
       - app-network
+
 
   order-service:
     build: ./Order_service
@@ -118,6 +120,7 @@ services:
     networks:
       - app-network
 
+
   transactional-service:
     build: ./Transactional_service
     container_name: transactional_service
@@ -125,6 +128,28 @@ services:
       - "${TRANSACTIONAL_SERVICE_PORT}:${TRANSACTIONAL_SERVICE_PORT}"
     environment:
       SERVER_PORT: "${TRANSACTIONAL_SERVICE_PORT}"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
+    networks:
+      - app-network
+
+  transactional-service-2:
+    build: ./Transactional_service
+    container_name: transactional_service_2
+    ports:
+      - "${TRANSACTIONAL_SERVICE_2_PORT}:${TRANSACTIONAL_SERVICE_2_PORT}"
+    environment:
+      SERVER_PORT: "${TRANSACTIONAL_SERVICE_2_PORT}"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
+    networks:
+      - app-network
+
+  transactional-service-3:
+    build: ./Transactional_service
+    container_name: transactional_service_3
+    ports:
+      - "${TRANSACTIONAL_SERVICE_3_PORT}:${TRANSACTIONAL_SERVICE_3_PORT}"
+    environment:
+      SERVER_PORT: "${TRANSACTIONAL_SERVICE_3_PORT}"
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
     networks:
       - app-network
@@ -141,52 +166,8 @@ services:
     networks:
       - app-network
 
-  transactional-service-2:
-    build: ./Transactional_service
-    container_name: transactional_service_2
-    ports:
-      - "${TRANSACTIONAL_SERVICE_2_PORT}:${TRANSACTIONAL_SERVICE_2_PORT}"
-    environment:
-      SERVER_PORT: "${TRANSACTIONAL_SERVICE_2_PORT}"
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
-    networks:
-      - app-network
-
-  transactional-db-2:
-    image: postgres
-    container_name: transactional_db_2
-    ports:
-      - "${TRANSACTIONAL_DB_2_PORT}:5432"
-    environment:
-      POSTGRES_DB: transactional_db_2
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: 123
-    networks:
-      - app-network
-
-  transactional-service-3:
-    build: ./Transactional_service
-    container_name: transactional_service_3
-    ports:
-      - "${TRANSACTIONAL_SERVICE_3_PORT}:${TRANSACTIONAL_SERVICE_3_PORT}"
-    environment:
-      SERVER_PORT: "${TRANSACTIONAL_SERVICE_3_PORT}"
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29192,kafka-3:29392
-    networks:
-      - app-network
-
-  transactional-db-3:
-    image: postgres
-    container_name: transactional_db_3
-    ports:
-      - "${TRANSACTIONAL_DB_3_PORT}:5432"
-    environment:
-      POSTGRES_DB: transactional_db_3
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: 123
-    networks:
-      - app-network
 
 networks:
   app-network:
     driver: bridge
+

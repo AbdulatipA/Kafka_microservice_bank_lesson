@@ -22,7 +22,4 @@
 
 >[Docker-compose](https://github.com/AbdulatipA/Kafka_microservice_bank_lesson/blob/main/Docker-compose.yaml)
 
->[Переменные окружения](https://github.com/AbdulatipA/Kafka_microservice_bank_lesson/blob/main/.env)
-
-
-
+>[Настройка портор .env](https://github.com/AbdulatipA/Kafka_microservice_bank_lesson/blob/main/.env)
